@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>115學年度第一學期 高一微課程互動式檢索系統</title>
+  <style>
+    /* ==================== 基礎色彩與全域變數 ==================== */
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #e0e7ff;
+      --primary-dark: #3730a3;
+      --primary-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);
+      --accent: #06b6d4;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #e2e8f0;
+      
+      /* 教師專屬色彩 */
+      --t-shi-bg: #fef08a;
+      --t-shi-text: #854d0e;
+      --t-shi-border: #facc15;
+      
+      --t-chiang-bg: #bae6fd;
+      --t-chiang-text: #0369a1;
+      --t-chiang-border: #7dd3fc;
+      
+      --t-ho-bg: #bbf7d0;
+      --t-ho-text: #15803d;
+      --t-ho-border: #86efac;
+      
+      --t-chen-bg: #fbcfe8;
+      --t-chen-text: #be185d;
+      --t-chen-border: #f472b6;
+      
+      --t-yeh-bg: #ddd6fe;
+      --t-yeh-text: #6d28d9;
+      --t-yeh-border: #c4b5fd;
+      
+      --t-lai-bg: #fed7aa;
+      --t-lai-text: #c2410c;
+      --t-lai-border: #fdba74;
+      
+      --t-lai-chun-bg: #99f6e4;
+      --t-lai-chun-text: #0f766e;
+      --t-lai-chun-border: #5eead4;
+      
+      --t-yang-bg: #fecdd3;
+      --t-yang-text: #be123c;
+      --t-yang-border: #fda4af;
+      
+      /* 字級大小控制 (注意字體不小於16px，大字/特大模式) */
+      --font-scale: 1;
+      --font-base: calc(16.5px * var(--font-scale));
+      --font-lg: calc(19px * var(--font-scale));
+      --font-xl: calc(23px * var(--font-scale));
+      --font-title: calc(29px * var(--font-scale));
+      --font-small: calc(14.5px * var(--font-scale));
+      
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius: 16px;
+    }
+
+    /* 字級模式切換 (長輩與手機閱讀友善) */
+    body.font-large { --font-scale: 1.15; }
+    body.font-xlarge { --font-scale: 1.32; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 40%, #faf5ff 100%);
+      color: var(--text-main);
+      font-size: var(--font-base);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
+    /* ==================== 頂部導覽列 ==================== */
+    header {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--primary-gradient);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 26px;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: var(--font-xl);
+      font-weight: 800;
+      background: linear-gradient(90deg, #1e1b4b, #4338ca, #6d28d9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-text p {
+      font-size: var(--font-small);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: var(--font-small);
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tool-btn:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+      color: #0f172a;
+    }
+
+    .tool-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.35);
+    }
+
+    /* ==================== 統計數據卡片 ==================== */
+    .container {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .stat-val {
+      font-size: var(--font-title);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #0f172a;
+    }
+
+    .stat-label {
+      font-size: var(--font-small);
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* ==================== 搜尋與過濾中樞 ==================== */
+    .filter-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 15px 22px 15px 54px;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      font-size: var(--font-lg);
+      outline: none;
+      transition: all 0.2s;
+      background: #f8fafc;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #e2e8f0;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: #475569;
+      font-weight: bold;
+    }
+
+    .filter-selectors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: var(--font-small);
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .custom-select {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      background: #ffffff;
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: #1e293b;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .custom-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .filter-footer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-chip-label {
+      font-size: var(--font-small);
+      font-weight: 800;
+      color: #64748b;
+      margin-right: 4px;
+    }
+
+    .chip-btn {
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      padding: 7px 15px;
+      border-radius: 999px;
+      font-size: var(--font-small);
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .chip-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .chip-btn.special-shi {
+      background: var(--t-shi-bg);
+      color: var(--t-shi-text);
+      border-color: var(--t-shi-border);
+      font-weight: 800;
+    }
+
+    .chip-btn.special-shi:hover {
+      background: #fde047;
+    }
+
+    .chip-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+    }
+
+    .filter-count-badge {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: var(--font-small);
+      font-weight: 700;
+    }
+
+    /* ==================== 視角分頁 (Tabs) ==================== */
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 26px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 13px 22px;
+      font-size: var(--font-lg);
+      font-weight: 800;
+      color: #64748b;
+      cursor: pointer;
+      border-bottom: 3.5px solid transparent;
+      margin-bottom: -6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-badge {
+      font-size: 13px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .tab-btn.active .tab-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==================== 標籤一：矩陣總覽表 ==================== */
+    .matrix-group-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .matrix-group-header {
+      padding: 18px 24px;
+      background: linear-gradient(90deg, #f8fafc, #f1f5f9);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .group-title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .group-pill {
+      background: #4f46e5;
+      color: white;
+      padding: 5px 14px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: var(--font-base);
+    }
+
+    .group-desc {
+      font-weight: 800;
+      color: #1e293b;
+      font-size: var(--font-lg);
+    }
+
+    .group-subinfo {
+      font-size: var(--font-small);
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .table-scroll-container {
+      overflow-x: auto;
+      max-height: 560px;
+      position: relative;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: var(--font-base);
+      white-space: nowrap;
+    }
+
+    .matrix-table th, .matrix-table td {
+      border: 1px solid #e2e8f0;
+      padding: 12px 16px;
+      vertical-align: middle;
+    }
+
+    .matrix-table thead th {
+      background: #f8fafc;
+      font-weight: 800;
+      color: #334155;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .matrix-table .th-class {
+      position: sticky;
+      left: 0;
+      z-index: 20;
+      background: #f1f5f9;
+      font-weight: 800;
+      color: #1e293b;
+      min-width: 120px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    }
+
+    .matrix-table thead th.th-class {
+      z-index: 30;
+      background: #e2e8f0;
+    }
+
+    .teacher-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: var(--font-base);
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      border: 1.5px solid transparent;
+    }
+
+    .teacher-badge:hover {
+      transform: scale(1.12);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+      z-index: 5;
+    }
+
+    /* 教師顏色標籤 */
+    .teacher-shi { background: var(--t-shi-bg); color: var(--t-shi-text); border-color: var(--t-shi-border); font-weight: 800; }
+    .teacher-chiang { background: var(--t-chiang-bg); color: var(--t-chiang-text); border-color: var(--t-chiang-border); }
+    .teacher-ho { background: var(--t-ho-bg); color: var(--t-ho-text); border-color: var(--t-ho-border); }
+    .teacher-chen { background: var(--t-chen-bg); color: var(--t-chen-text); border-color: var(--t-chen-border); }
+    .teacher-yeh { background: var(--t-yeh-bg); color: var(--t-yeh-text); border-color: var(--t-yeh-border); }
+    .teacher-lai { background: var(--t-lai-bg); color: var(--t-lai-text); border-color: var(--t-lai-border); }
+    .teacher-lai-chun { background: var(--t-lai-chun-bg); color: var(--t-lai-chun-text); border-color: var(--t-lai-chun-border); }
+    .teacher-yang { background: var(--t-yang-bg); color: var(--t-yang-text); border-color: var(--t-yang-border); }
+
+    /* 高亮聚焦模式 */
+    .cell-dimmed {
+      opacity: 0.22;
+      filter: grayscale(85%);
+    }
+
+    .cell-highlighted {
+      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(79, 70, 229, 0.45);
+      z-index: 5;
+    }
+
+    /* ==================== 標籤二：教師個人課表 ==================== */
+    .teacher-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .teacher-card-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .teacher-card-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .teacher-card-btn.active {
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      background: #faf5ff;
+    }
+
+    .t-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .teacher-summary-banner {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      border-radius: var(--radius);
+      padding: 26px 30px;
+      margin-bottom: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+      box-shadow: 0 12px 24px rgba(79, 70, 229, 0.22);
+    }
+
+    .t-info-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .t-big-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .t-info-text h2 {
+      font-size: var(--font-title);
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .t-info-text p {
+      font-size: var(--font-base);
+      opacity: 0.95;
+    }
+
+    .t-stats-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .t-stat-pill {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: var(--font-base);
+      font-weight: 800;
+      backdrop-filter: blur(4px);
+    }
+
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    .schedule-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .schedule-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .schedule-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--primary);
+    }
+
+    .card-date-badge {
+      font-size: var(--font-small);
+      font-weight: 800;
+      color: #64748b;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card-main-info {
+      font-size: var(--font-lg);
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .card-extra-info {
+      font-size: var(--font-small);
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    /* ==================== 標籤三：班級課表視角 ==================== */
+    .class-select-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 26px;
+    }
+
+    .class-btn {
+      background: var(--card-bg);
+      border: 1.5px solid #cbd5e1;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: var(--font-base);
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .class-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .class-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+    }
+
+    .class-roadmap-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .class-roadmap-header {
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .rotation-blocks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .rotation-item {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rotation-item:hover {
+      background: #ffffff;
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rotation-seq {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: #4338ca;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: var(--font-small);
+      flex-shrink: 0;
+    }
+
+    /* ==================== 標籤四：日期檢索視角 ==================== */
+    .date-filter-strip {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      scrollbar-width: thin;
+    }
+
+    .date-pill-btn {
+      background: var(--card-bg);
+      border: 1.5px solid #cbd5e1;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: var(--font-base);
+      font-weight: 700;
+      color: #334155;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .date-pill-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .date-pill-btn.active {
+      background: #0284c7;
+      color: white;
+      border-color: #0284c7;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    }
+
+    .day-sessions-table-wrap {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==================== 標籤五：統計與視覺化分析 ==================== */
+    .chart-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 26px 30px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 26px;
+    }
+
+    .chart-panel h3 {
+      font-size: var(--font-xl);
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 20px;
+    }
+
+    .bar-chart-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .bar-label {
+      width: 120px;
+      font-size: var(--font-base);
+      font-weight: 800;
+      text-align: right;
+      color: #334155;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 28px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    .bar-value {
+      width: 70px;
+      font-size: var(--font-base);
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    /* ==================== 課堂詳細資訊彈出層 (Modal) ==================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.25), 0 12px 15px -5px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      transform: scale(0.95);
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-overlay.show .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 22px 26px;
+      background: var(--primary-gradient);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: var(--font-xl);
+      font-weight: 800;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+    }
+
+    .modal-detail-row {
+      display: flex;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .modal-label {
+      width: 105px;
+      font-weight: 800;
+      color: #64748b;
+      font-size: var(--font-base);
+    }
+
+    .modal-value {
+      flex: 1;
+      font-weight: 800;
+      color: #0f172a;
+      font-size: var(--font-lg);
+    }
+
+    .modal-context-box {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: var(--font-small);
+      color: #475569;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+    }
+
+    .modal-action-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: var(--font-base);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.18s;
+    }
+
+    .btn-primary-action {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary-action:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary-action {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .btn-secondary-action:hover {
+      background: #e2e8f0;
+    }
+
+    /* ==================== 浮動提示 Toast ==================== */
+    .toast-container {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background: #1e293b;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: var(--font-base);
+      font-weight: 700;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideInUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* ==================== 響應式優化與印表機模式 ==================== */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .brand-text h1 {
+        font-size: 20px;
+      }
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .filter-selectors {
+        grid-template-columns: 1fr;
+      }
+      .tabs-nav {
+        gap: 4px;
+      }
+      .tab-btn {
+        padding: 10px 14px;
+        font-size: 15px;
+      }
+      .timeline-grid {
+        grid-template-columns: 1fr;
+      }
+      .filter-footer-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .modal-actions {
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      header, .filter-panel, .tabs-nav, .header-controls, .toast-container, .modal-overlay {
+        display: none !important;
+      }
+      body {
+        background: white;
+        color: black;
+        font-size: 11pt;
+      }
+      .matrix-group-card {
+        box-shadow: none;
+        border: 1px solid #333;
+        page-break-after: always;
+      }
+      .table-scroll-container {
+        max-height: none;
+        overflow: visible;
+      }
+      .matrix-table th, .matrix-table td {
+        border: 1px solid #333;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部導覽列 -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">📚</div>
+        <div class="brand-text">
+          <h1>高一微課程互動式檢索系統</h1>
+          <p>115學年度第一學期 任課教師暨上課時間地點一覽表</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <!-- 音效開關 -->
+        <button id="soundToggleBtn" class="tool-btn active" title="點擊切換音效">
+          <span id="soundIcon">🔊</span>
+          <span id="soundText">音效開啟</span>
+        </button>
+        <!-- 字級切換 -->
+        <button id="fontSizeBtn" class="tool-btn" title="切換字體大小以利長輩及手機閱讀">
+          <span>🔠</span>
+          <span id="fontSizeText">標準字體</span>
+        </button>
+        <!-- 列印 Friendly -->
+        <button id="printBtn" class="tool-btn" title="列印或另存為PDF">
+          <span>🖨️</span>
+          <span>列印/另存</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- 快捷數據看板 -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">🏛️</div>
+        <div>
+          <div class="stat-val" id="statGroups">4</div>
+          <div class="stat-label">分群開課時段</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fef3c7; color: #b45309;">👨‍🏫</div>
+        <div>
+          <div class="stat-val" id="statTeachers">8</div>
+          <div class="stat-label">位專業任課教師</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #dcfce7; color: #15803d;">🎒</div>
+        <div>
+          <div class="stat-val" id="statClasses">14</div>
+          <div class="stat-label">個高一修課班級</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fce7f3; color: #be185d;">📅</div>
+        <div>
+          <div class="stat-val" id="statSessions">427</div>
+          <div class="stat-label">總上課節次規劃</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 檢索與多條件過濾區 -->
+    <div class="filter-panel">
+      <!-- 模糊搜尋輸入框 -->
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="即時檢索：輸入教師姓名 (如 施文賢)、班級 (如 一年1班)、日期 (如 9月7日)、群別...">
+        <button id="clearSearchBtn" class="clear-search-btn" title="清空搜尋">✕</button>
+      </div>
+
+      <!-- 下拉式篩選 -->
+      <div class="filter-selectors">
+        <div class="filter-group">
+          <label>分群時段：</label>
+          <select id="groupSelect" class="custom-select">
+            <option value="all">全部群別 (第1~4群)</option>
+            <option value="1">第1群 (星期一 第1節)</option>
+            <option value="2">第2群 (星期二 第2節)</option>
+            <option value="3">第3群 (星期一 第6節)</option>
+            <option value="4">第4群 (星期四 第5節)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>任課教師：</label>
+          <select id="teacherSelect" class="custom-select">
+            <option value="all">全部任課教師 (8位)</option>
+            <option value="施文賢">施文賢 老師 (亮黃特標)</option>
+            <option value="江明慧">江明慧 老師</option>
+            <option value="何友友">何友友 老師</option>
+            <option value="陳佩萱">陳佩萱 老師</option>
+            <option value="葉叢瑜">葉叢瑜 老師</option>
+            <option value="賴奕成">賴奕成 老師</option>
+            <option value="賴俊帆">賴俊帆 老師</option>
+            <option value="楊瑞雲">楊瑞雲 老師</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>上課班級：</label>
+          <select id="classSelect" class="custom-select">
+            <option value="all">全部班級 (14班)</option>
+            <option value="一年1班">一年1班</option>
+            <option value="一年2班">一年2班</option>
+            <option value="一年3班">一年3班</option>
+            <option value="一年4班">一年4班</option>
+            <option value="一年5班">一年5班</option>
+            <option value="一年6班">一年6班</option>
+            <option value="一年7班">一年7班</option>
+            <option value="一年8班">一年8班</option>
+            <option value="一年9班">一年9班</option>
+            <option value="一年10班">一年10班</option>
+            <option value="一年11班">一年11班</option>
+            <option value="一年12班">一年12班</option>
+            <option value="一年13班">一年13班</option>
+            <option value="體育一甲">體育一甲</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>上課月份：</label>
+          <select id="monthSelect" class="custom-select">
+            <option value="all">全部月份 (全學期)</option>
+            <option value="8月">8月</option>
+            <option value="9月">9月</option>
+            <option value="10月">10月</option>
+            <option value="11月">11月</option>
+            <option value="12月">12月</option>
+            <option value="1月">1月</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 快速快捷按鈕與篩選結果統計 -->
+      <div class="filter-footer-bar">
+        <div class="quick-chips">
+          <span class="quick-chip-label">快捷推薦：</span>
+          <button class="chip-btn active" data-action="reset">全部重置</button>
+          <button class="chip-btn special-shi" data-teacher="施文賢">⭐ 施文賢老師專區</button>
+          <button class="chip-btn" data-class="體育一甲">🏃 體育一甲</button>
+          <button class="chip-btn" data-group="1">📅 第1群 (週一第1節)</button>
+          <button class="chip-btn" data-group="2">📅 第2群 (週二第2節)</button>
+          <button class="chip-btn" data-group="3">📅 第3群 (週一第6節)</button>
+          <button class="chip-btn" data-group="4">📅 第4群 (週四第5節)</button>
+        </div>
+        <div class="filter-count-badge" id="filterCountBadge">
+          顯示中課堂：427 堂
+        </div>
+      </div>
+    </div>
+
+    <!-- 視角切換 Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="matrixView">
+        <span>📊 矩陣總覽表</span>
+        <span class="tab-badge">原表完整版</span>
+      </button>
+      <button class="tab-btn" data-tab="teacherView">
+        <span>👨‍🏫 教師個別課表</span>
+        <span class="tab-badge">8位教師</span>
+      </button>
+      <button class="tab-btn" data-tab="classView">
+        <span>🎓 班級進度課表</span>
+        <span class="tab-badge">14個班級</span>
+      </button>
+      <button class="tab-btn" data-tab="dateView">
+        <span>📆 日期歷程檢索</span>
+        <span class="tab-badge">22天上課日</span>
+      </button>
+      <button class="tab-btn" data-tab="statsView">
+        <span>📈 統計數據分析</span>
+        <span class="tab-badge">圖表視覺化</span>
+      </button>
+    </div>
+
+    <!-- ==================== 視角一：矩陣總覽表 ==================== -->
+    <section id="matrixView" class="view-section active">
+      <div id="matrixContainer">
+        <!-- 由 JavaScript 動態繪製 4 個群組的矩陣 -->
+      </div>
+    </section>
+
+    <!-- ==================== 視角二：教師個別課表 ==================== -->
+    <section id="teacherView" class="view-section">
+      <div class="teacher-select-grid" id="teacherCardsGrid">
+        <!-- 點選教師頭像卡片 -->
+      </div>
+      <div id="teacherDetailArea">
+        <!-- 教師統計橫幅與時間表 -->
+      </div>
+    </section>
+
+    <!-- ==================== 視角三：班級進度課表 ==================== -->
+    <section id="classView" class="view-section">
+      <div class="class-select-bar" id="classButtonsBar">
+        <!-- 班級按鈕列表 -->
+      </div>
+      <div id="classRoadmapArea">
+        <!-- 班級微課程進度時間軸 -->
+      </div>
+    </section>
+
+    <!-- ==================== 視角四：日期歷程檢索 ==================== -->
+    <section id="dateView" class="view-section">
+      <div class="date-filter-strip" id="datePillsStrip">
+        <!-- 日期膠囊標籤 -->
+      </div>
+      <div id="dateSessionsArea">
+        <!-- 當日課堂列表 -->
+      </div>
+    </section>
+
+    <!-- ==================== 視角五：統計數據分析 ==================== -->
+    <section id="statsView" class="view-section">
+      <div class="chart-panel">
+        <h3>👨‍🏫 8 位任課教師總授課節數分佈</h3>
+        <div id="teacherWorkloadBars">
+          <!-- 視覺化長條圖 -->
+        </div>
+      </div>
+      <div class="chart-panel">
+        <h3>🏛️ 4 大分群時段課堂節次統計</h3>
+        <div id="groupStatsBars">
+          <!-- 分群時段長條圖 -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 課堂詳細資訊 Modal -->
+  <div class="modal-overlay" id="courseModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">微課程課堂詳情</h3>
+        <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-detail-row">
+          <span class="modal-label">上課日期：</span>
+          <span class="modal-value" id="modalDate">-</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-label">開課群別：</span>
+          <span class="modal-value" id="modalGroup">-</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-label">上課時間：</span>
+          <span class="modal-value" id="modalTime">-</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-label">上課班級：</span>
+          <span class="modal-value" id="modalClass">-</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-label">任課教師：</span>
+          <span class="modal-value" id="modalTeacher">-</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-label">課程名稱：</span>
+          <span class="modal-value" id="modalCourseName">高一微課程（分群開課）</span>
+        </div>
+
+        <div class="modal-context-box" id="modalContextBox">
+          <!-- 前後週次輪替提示 -->
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-action-btn btn-primary-action" id="modalViewTeacherBtn">
+            <span>👨‍🏫 查看此教師課表</span>
+          </button>
+          <button class="modal-action-btn btn-secondary-action" id="modalViewClassBtn">
+            <span>🎓 查看此班級學習地圖</span>
+          </button>
+          <button class="modal-action-btn btn-secondary-action" id="modalCopyBtn">
+            <span>📋 複製課堂資訊</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提示 Toast 容器 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 資料與核心邏輯程式碼 -->
+  <script>
+    const RAW_DATA = {"semester": "115學年度第一學期", "course_type": "高一微課程（分群開課）", "title": "115學年度第一學期高一微課程任課教師暨上課時間地點一覽表", "groups": [{"groupId": 1, "name": "第1群", "time": "星期一 第1節", "weekday": "星期一", "period": "第1節", "dates": ["9月7日", "9月14日", "9月21日", "10月5日", "10月12日", "10月19日", "11月2日", "11月9日", "11月16日", "11月23日", "11月30日", "12月7日", "12月14日", "12月21日", "12月28日", "1月4日", "1月11日"], "classes": {"一年1班": ["何友友", "何友友", "何友友", "江明慧", "江明慧", "江明慧", "施文賢", "施文賢", "施文賢", "楊瑞雲", "楊瑞雲", "賴奕成", "賴奕成", "葉叢瑜", "葉叢瑜", "陳佩萱", "陳佩萱"], "一年2班": ["賴奕成", "賴奕成", "賴奕成", "陳佩萱", "陳佩萱", "陳佩萱", "楊瑞雲", "楊瑞雲", "楊瑞雲", "施文賢", "施文賢", "葉叢瑜", "葉叢瑜", "江明慧", "江明慧", "何友友", "何友友"], "一年6班": ["施文賢", "施文賢", "施文賢", "葉叢瑜", "葉叢瑜", "葉叢瑜", "賴奕成", "賴奕成", "賴奕成", "江明慧", "江明慧", "何友友", "何友友", "陳佩萱", "陳佩萱", "楊瑞雲", "楊瑞雲"], "一年7班": ["江明慧", "江明慧", "江明慧", "何友友", "何友友", "何友友", "葉叢瑜", "葉叢瑜", "葉叢瑜", "賴奕成", "賴奕成", "陳佩萱", "陳佩萱", "楊瑞雲", "楊瑞雲", "施文賢", "施文賢"], "一年8班": ["葉叢瑜", "葉叢瑜", "葉叢瑜", "施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "江明慧", "陳佩萱", "陳佩萱", "楊瑞雲", "楊瑞雲", "何友友", "何友友", "賴奕成", "賴奕成"], "一年10班": ["楊瑞雲", "楊瑞雲", "楊瑞雲", "賴奕成", "賴奕成", "賴奕成", "陳佩萱", "陳佩萱", "陳佩萱", "何友友", "何友友", "江明慧", "江明慧", "施文賢", "施文賢", "葉叢瑜", "葉叢瑜"], "一年12班": ["陳佩萱", "陳佩萱", "陳佩萱", "楊瑞雲", "楊瑞雲", "楊瑞雲", "何友友", "何友友", "何友友", "葉叢瑜", "葉叢瑜", "施文賢", "施文賢", "賴奕成", "賴奕成", "江明慧", "江明慧"]}}, {"groupId": 2, "name": "第2群", "time": "星期二 第2節", "weekday": "星期二", "period": "第2節", "dates": ["9月1日", "9月8日", "9月15日", "9月22日", "9月29日", "10月6日", "10月20日", "10月27日", "11月3日", "11月10日", "11月17日", "11月24日", "12月1日", "12月8日", "12月15日", "12月22日", "12月29日", "1月5日", "1月12日"], "classes": {"一年3班": ["施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "陳佩萱", "陳佩萱", "陳佩萱", "何友友", "何友友", "何友友", "賴俊帆", "賴俊帆", "賴俊帆", "賴奕成", "賴奕成", "賴奕成"], "一年4班": ["賴奕成", "賴奕成", "賴奕成", "施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "陳佩萱", "陳佩萱", "陳佩萱", "何友友", "何友友", "何友友", "賴俊帆", "賴俊帆", "賴俊帆"], "一年5班": ["賴俊帆", "賴俊帆", "賴俊帆", "賴奕成", "賴奕成", "賴奕成", "施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "陳佩萱", "陳佩萱", "陳佩萱", "何友友", "何友友", "何友友"], "一年9班": ["何友友", "何友友", "何友友", "賴俊帆", "賴俊帆", "賴俊帆", "賴奕成", "賴奕成", "賴奕成", "施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "陳佩萱", "陳佩萱", "陳佩萱"], "一年11班": ["陳佩萱", "陳佩萱", "陳佩萱", "何友友", "何友友", "何友友", "賴俊帆", "賴俊帆", "賴俊帆", "賴奕成", "賴奕成", "賴奕成", "施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜"], "一年13班": ["江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "陳佩萱", "陳佩萱", "陳佩萱", "何友友", "何友友", "何友友", "賴俊帆", "賴俊帆", "賴俊帆", "賴奕成", "賴奕成", "賴奕成", "施文賢", "施文賢", "施文賢"]}}, {"groupId": 3, "name": "第3群", "time": "星期一 第6節", "weekday": "星期一", "period": "第6節", "dates": ["8月31日", "9月7日", "9月14日", "9月21日", "10月5日", "10月12日", "10月19日", "11月2日", "11月9日", "11月16日", "11月23日", "11月30日", "12月7日", "12月14日", "12月21日", "12月28日", "1月4日", "1月11日"], "classes": {"體育一甲": ["施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "楊瑞雲", "楊瑞雲", "賴奕成", "賴奕成", "賴奕成", "何友友", "何友友", "何友友", "陳佩萱", "陳佩萱", "陳佩萱"]}}, {"groupId": 4, "name": "第4群", "time": "星期四 第5節", "weekday": "星期四", "period": "第5節", "dates": ["9月3日", "9月10日", "9月17日", "9月24日", "10月1日", "10月8日", "10月15日", "10月22日", "10月29日", "11月5日", "11月12日", "11月19日", "11月26日", "12月10日", "12月17日", "12月24日", "12月31日", "1月7日", "1月14日"], "classes": {"體育一甲": ["施文賢", "施文賢", "施文賢", "江明慧", "江明慧", "葉叢瑜", "葉叢瑜", "賴俊帆", "賴俊帆", "賴俊帆", "賴奕成", "賴奕成", "賴奕成", "何友友", "何友友", "何友友", "陳佩萱", "陳佩萱", "陳佩萱"]}}]};
+
+    // 教師設定配置表
+    const TEACHER_CONFIG = {
+      "施文賢": { class: "teacher-shi", color: "#854d0e", bg: "#fef08a", border: "#facc15", isFeatured: true },
+      "江明慧": { class: "teacher-chiang", color: "#0369a1", bg: "#bae6fd", border: "#7dd3fc" },
+      "何友友": { class: "teacher-ho", color: "#15803d", bg: "#bbf7d0", border: "#86efac" },
+      "陳佩萱": { class: "teacher-chen", color: "#be185d", bg: "#fbcfe8", border: "#f472b6" },
+      "葉叢瑜": { class: "teacher-yeh", color: "#6d28d9", bg: "#ddd6fe", border: "#c4b5fd" },
+      "賴奕成": { class: "teacher-lai", color: "#c2410c", bg: "#fed7aa", border: "#fdba74" },
+      "賴俊帆": { class: "teacher-lai-chun", color: "#0f766e", bg: "#99f6e4", border: "#5eead4" },
+      "楊瑞雲": { class: "teacher-yang", color: "#be123c", bg: "#fecdd3", border: "#fda4af" }
+    };
+
+    // ==================== 音效引擎 (Web Audio API 原生合成) ====================
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playPop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(840, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+      playTap() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+      playChime() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+          gain.gain.setValueAtTime(0.12, now + idx * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.06);
+          osc.stop(now + idx * 0.06 + 0.25);
+        });
+      }
+      playReset() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(300, now + 0.15);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    // ==================== 全域狀態與扁平化數據 ====================
+    const flatSessions = [];
+    const allTeachers = Object.keys(TEACHER_CONFIG);
+    const allClasses = [];
+    const allDates = [];
+
+    RAW_DATA.groups.forEach(group => {
+      group.dates.forEach((date, dateIdx) => {
+        if (!allDates.includes(date)) allDates.push(date);
+        Object.entries(group.classes).forEach(([className, teacherList]) => {
+          if (!allClasses.includes(className)) allClasses.push(className);
+          const teacher = teacherList[dateIdx];
+          flatSessions.push({
+            groupId: group.groupId,
+            groupName: group.name,
+            groupTime: group.time,
+            weekday: group.weekday,
+            period: group.period,
+            date: date,
+            dateIdx: dateIdx,
+            className: className,
+            teacher: teacher
+          });
+        });
+      });
+    });
+
+    let activeFilters = {
+      search: "",
+      groupId: "all",
+      teacher: "all",
+      className: "all",
+      month: "all"
+    };
+
+    let activeTab = "matrixView";
+    let activeTeacher = "施文賢";
+    let activeClass = "一年1班";
+    let activeDate = allDates[0];
+
+    // ==================== UI 輔助工具 ====================
+    function showToast(msg, icon = '💡') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    function updateMatchCount() {
+      const matched = flatSessions.filter(s => isSessionMatch(s));
+      const badge = document.getElementById('filterCountBadge');
+      if (badge) {
+        badge.textContent = `顯示中課堂：${matched.length} 堂 / 427 堂`;
+      }
+    }
+
+    function isSessionMatch(s) {
+      if (activeFilters.groupId !== 'all' && s.groupId != activeFilters.groupId) return false;
+      if (activeFilters.teacher !== 'all' && s.teacher !== activeFilters.teacher) return false;
+      if (activeFilters.className !== 'all' && s.className !== activeFilters.className) return false;
+      if (activeFilters.month !== 'all' && !s.date.includes(activeFilters.month)) return false;
+      if (activeFilters.search) {
+        const q = activeFilters.search.toLowerCase();
+        const match = s.teacher.toLowerCase().includes(q) || 
+                      s.className.toLowerCase().includes(q) || 
+                      s.date.toLowerCase().includes(q) ||
+                      s.groupName.toLowerCase().includes(q) ||
+                      s.groupTime.toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      return true;
+    }
+
+    // ==================== 矩陣總覽表渲染 ====================
+    function renderMatrixView() {
+      const container = document.getElementById('matrixContainer');
+      container.innerHTML = "";
+      updateMatchCount();
+
+      RAW_DATA.groups.forEach(group => {
+        if (activeFilters.groupId !== 'all' && activeFilters.groupId != group.groupId) {
+          return;
+        }
+
+        const groupCard = document.createElement('div');
+        groupCard.className = 'matrix-group-card';
+
+        const totalWeeks = group.dates.length;
+        const classNames = Object.keys(group.classes);
+
+        let datesTh = group.dates.map((d, idx) => {
+          const isMatchMonth = activeFilters.month === 'all' || d.includes(activeFilters.month);
+          const style = isMatchMonth ? "" : "opacity: 0.3;";
+          return `<th style="${style}">${d}</th>`;
+        }).join('');
+
+        let rowsHtml = "";
+        classNames.forEach(cName => {
+          if (activeFilters.className !== 'all' && activeFilters.className !== cName) {
+            return;
+          }
+
+          let cellsHtml = "";
+          group.dates.forEach((date, idx) => {
+            const teacher = group.classes[cName][idx];
+            
+            let isDimmed = false;
+            let isHighlighted = false;
+
+            if (activeFilters.teacher !== 'all' && activeFilters.teacher !== teacher) {
+              isDimmed = true;
+            }
+            if (activeFilters.month !== 'all' && !date.includes(activeFilters.month)) {
+              isDimmed = true;
+            }
+            if (activeFilters.search) {
+              const q = activeFilters.search.toLowerCase();
+              const match = teacher.toLowerCase().includes(q) || 
+                            cName.toLowerCase().includes(q) || 
+                            date.toLowerCase().includes(q) ||
+                            group.name.toLowerCase().includes(q);
+              if (match) {
+                isHighlighted = true;
+              } else {
+                isDimmed = true;
+              }
+            }
+
+            const dimClass = isDimmed ? "cell-dimmed" : "";
+            const highlightClass = isHighlighted ? "cell-highlighted" : "";
+
+            cellsHtml += `
+              <td class="${dimClass} ${highlightClass}">
+                <span class="teacher-badge ${TEACHER_CONFIG[teacher].class}" 
+                      onclick="openCourseModal('${date}', '${group.name}', '${group.time}', '${cName}', '${teacher}', ${idx}, ${group.groupId})">
+                  ${teacher === '施文賢' ? '★ ' : ''}${teacher}
+                </span>
+              </td>
+            `;
+          });
+
+          rowsHtml += `
+            <tr>
+              <td class="th-class">${cName}</td>
+              ${cellsHtml}
+            </tr>
+          `;
+        });
+
+        groupCard.innerHTML = `
+          <div class="matrix-group-header">
+            <div class="group-title-badge">
+              <span class="group-pill">${group.name}</span>
+              <span class="group-desc">${group.time}</span>
+            </div>
+            <div class="group-subinfo">
+              共 ${totalWeeks} 次課程 ｜ 涵蓋班級：${classNames.join('、')}
+            </div>
+          </div>
+          <div class="table-scroll-container">
+            <table class="matrix-table">
+              <thead>
+                <tr>
+                  <th class="th-class">班級 \ 日期</th>
+                  ${datesTh}
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        container.appendChild(groupCard);
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 50px 20px; background: white; border-radius: var(--radius); color: #64748b;">
+            <p style="font-size: 22px; font-weight: 800;">🔍 查無符合篩選條件的課表資訊</p>
+            <p style="margin-top: 10px; font-size: 16px;">請嘗試點選上方「全部重置」或放寬關鍵字與下拉選單篩選。</p>
+          </div>
+        `;
+      }
+    }
+
+    // ==================== 視角二：教師個別課表渲染 ====================
+    function renderTeacherView() {
+      const grid = document.getElementById('teacherCardsGrid');
+      const detailArea = document.getElementById('teacherDetailArea');
+      grid.innerHTML = "";
+      updateMatchCount();
+
+      allTeachers.forEach(t => {
+        const conf = TEACHER_CONFIG[t];
+        const sessions = flatSessions.filter(s => s.teacher === t);
+        const count = sessions.length;
+        const btn = document.createElement('div');
+        btn.className = `teacher-card-btn ${t === activeTeacher ? 'active' : ''}`;
+        btn.onclick = () => {
+          sound.playPop();
+          activeTeacher = t;
+          renderTeacherView();
+        };
+
+        btn.innerHTML = `
+          <div class="t-avatar" style="background: ${conf.bg}; color: ${conf.color}; border: 2px solid ${conf.border};">
+            ${t.substring(0, 1)}
+          </div>
+          <div style="font-weight: 800; font-size: var(--font-base); color: #1e293b;">
+            ${t === '施文賢' ? '⭐ ' : ''}${t}
+          </div>
+          <div style="font-size: var(--font-small); color: #64748b; font-weight: 600;">
+            ${count} 堂課
+          </div>
+        `;
+        grid.appendChild(btn);
+      });
+
+      const tSessions = flatSessions.filter(s => {
+        if (s.teacher !== activeTeacher) return false;
+        return isSessionMatch(s);
+      });
+
+      const classesTaught = [...new Set(flatSessions.filter(s => s.teacher === activeTeacher).map(s => s.className))];
+      const groupsTaught = [...new Set(flatSessions.filter(s => s.teacher === activeTeacher).map(s => s.groupName))];
+
+      let timelineHtml = tSessions.map(s => `
+        <div class="schedule-card" onclick="openCourseModal('${s.date}', '${s.groupName}', '${s.groupTime}', '${s.className}', '${s.teacher}', ${s.dateIdx}, ${s.groupId})">
+          <div class="card-date-badge">
+            <span>📅 ${s.date}</span>
+            <span>${s.weekday}</span>
+          </div>
+          <div class="card-main-info">${s.className}</div>
+          <div class="card-extra-info">
+            <span>⏰ ${s.groupTime}</span>
+            <span>(${s.groupName})</span>
+          </div>
+        </div>
+      `).join('');
+
+      if (tSessions.length === 0) {
+        timelineHtml = `<p style="grid-column: 1/-1; color: #64748b; padding: 40px; text-align: center; font-weight: 700; font-size: 18px;">此教師在當前過濾條件下無排課紀錄。</p>`;
+      }
+
+      detailArea.innerHTML = `
+        <div class="teacher-summary-banner">
+          <div class="t-info-left">
+            <div class="t-big-avatar">
+              ${activeTeacher.substring(0, 1)}
+            </div>
+            <div class="t-info-text">
+              <h2>${activeTeacher === '施文賢' ? '⭐ ' : ''}${activeTeacher} 老師 微課程總覽</h2>
+              <p>授課群別：${groupsTaught.join('、')} ｜ 任教班級：${classesTaught.join('、')}</p>
+            </div>
+          </div>
+          <div class="t-stats-badges">
+            <div class="t-stat-pill">總授課數：${tSessions.length} 堂</div>
+            <div class="t-stat-pill">教學班數：${classesTaught.length} 班</div>
+          </div>
+        </div>
+
+        <div class="timeline-grid">
+          ${timelineHtml}
+        </div>
+      `;
+    }
+
+    // ==================== 視角三：班級課表視角渲染 ====================
+    function renderClassView() {
+      const bar = document.getElementById('classButtonsBar');
+      const area = document.getElementById('classRoadmapArea');
+      bar.innerHTML = "";
+      updateMatchCount();
+
+      allClasses.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = `class-btn ${c === activeClass ? 'active' : ''}`;
+        btn.textContent = c;
+        btn.onclick = () => {
+          sound.playTap();
+          activeClass = c;
+          renderClassView();
+        };
+        bar.appendChild(btn);
+      });
+
+      const cSessions = flatSessions.filter(s => s.className === activeClass);
+      if (cSessions.length === 0) return;
+
+      const groupName = cSessions[0].groupName;
+      const groupTime = cSessions[0].groupTime;
+
+      let itemsHtml = cSessions.map((s, idx) => {
+        const conf = TEACHER_CONFIG[s.teacher];
+        const isMatch = isSessionMatch(s);
+        const style = isMatch ? "" : "opacity: 0.35; filter: grayscale(70%);";
+        return `
+          <div class="rotation-item" style="${style}" onclick="openCourseModal('${s.date}', '${s.groupName}', '${s.groupTime}', '${s.className}', '${s.teacher}', ${idx}, ${s.groupId})">
+            <div class="rotation-seq">第 ${idx + 1} 週</div>
+            <div style="flex: 1;">
+              <div style="font-size: var(--font-small); color: #64748b; font-weight: 800;">${s.date}</div>
+              <div style="margin-top: 6px;">
+                <span class="teacher-badge ${conf.class}">${s.teacher === '施文賢' ? '★ ' : ''}${s.teacher}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      area.innerHTML = `
+        <div class="class-roadmap-container">
+          <div class="class-roadmap-header">
+            <div>
+              <h2 style="font-size: var(--font-xl); font-weight: 800; color: #1e293b;">
+                🎓 ${activeClass} 微課程輪替學習地圖
+              </h2>
+              <p style="color: #64748b; font-size: var(--font-base); font-weight: 700; margin-top: 4px;">
+                開課群別：${groupName} ｜ 上課時段：${groupTime} ｜ 全學期共 ${cSessions.length} 週
+              </p>
+            </div>
+          </div>
+          <div class="rotation-blocks-grid">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    // ==================== 視角四：日期歷程檢索渲染 ====================
+    function renderDateView() {
+      const strip = document.getElementById('datePillsStrip');
+      const area = document.getElementById('dateSessionsArea');
+      strip.innerHTML = "";
+      updateMatchCount();
+
+      allDates.forEach(d => {
+        const btn = document.createElement('button');
+        btn.className = `date-pill-btn ${d === activeDate ? 'active' : ''}`;
+        btn.textContent = d;
+        btn.onclick = () => {
+          sound.playTap();
+          activeDate = d;
+          renderDateView();
+        };
+        strip.appendChild(btn);
+      });
+
+      const daySessions = flatSessions.filter(s => s.date === activeDate && isSessionMatch(s));
+
+      let cardsHtml = daySessions.map(s => {
+        const conf = TEACHER_CONFIG[s.teacher];
+        return `
+          <div class="schedule-card" onclick="openCourseModal('${s.date}', '${s.groupName}', '${s.groupTime}', '${s.className}', '${s.teacher}', ${s.dateIdx}, ${s.groupId})">
+            <div class="card-date-badge">
+              <span>${s.groupName}</span>
+              <span>${s.groupTime}</span>
+            </div>
+            <div class="card-main-info">${s.className}</div>
+            <div class="card-extra-info">
+              <span>授課教師：</span>
+              <span class="teacher-badge ${conf.class}">${s.teacher === '施文賢' ? '★ ' : ''}${s.teacher}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (daySessions.length === 0) {
+        cardsHtml = `<p style="grid-column: 1/-1; color: #64748b; padding: 40px; text-align: center; font-weight: 700; font-size: 18px;">當日於目前篩選條件下無符合課程。</p>`;
+      }
+
+      area.innerHTML = `
+        <div class="day-sessions-table-wrap">
+          <h2 style="font-size: var(--font-xl); font-weight: 800; margin-bottom: 6px;">
+            📅 ${activeDate} 當日進行課程 (共 ${daySessions.length} 堂)
+          </h2>
+          <p style="color: #64748b; margin-bottom: 22px; font-weight: 600;">
+            點選任一課程卡片可查看課堂詳細輪替規劃與上下文
+          </p>
+          <div class="timeline-grid">
+            ${cardsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    // ==================== 視角五：統計數據分析渲染 ====================
+    function renderStatsView() {
+      const tContainer = document.getElementById('teacherWorkloadBars');
+      const gContainer = document.getElementById('groupStatsBars');
+
+      tContainer.innerHTML = "";
+      gContainer.innerHTML = "";
+
+      const tCounts = allTeachers.map(t => ({
+        teacher: t,
+        count: flatSessions.filter(s => s.teacher === t).length,
+        conf: TEACHER_CONFIG[t]
+      })).sort((a, b) => b.count - a.count);
+
+      const maxTCount = Math.max(...tCounts.map(item => item.count));
+
+      tCounts.forEach(item => {
+        const pct = (item.count / maxTCount * 100).toFixed(1);
+        const row = document.createElement('div');
+        row.className = 'bar-chart-row';
+        row.innerHTML = `
+          <div class="bar-label">${item.teacher === '施文賢' ? '⭐ ' : ''}${item.teacher}</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${pct}%; background: ${item.conf.bg}; border: 1.5px solid ${item.conf.border}; color: ${item.conf.color};">
+              ${item.count} 節
+            </div>
+          </div>
+          <div class="bar-value">${item.count} 堂</div>
+        `;
+        tContainer.appendChild(row);
+      });
+
+      RAW_DATA.groups.forEach(g => {
+        const gSessions = flatSessions.filter(s => s.groupId === g.groupId);
+        const row = document.createElement('div');
+        row.className = 'bar-chart-row';
+        row.innerHTML = `
+          <div class="bar-label" style="width: 150px;">${g.name} (${g.time})</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${(gSessions.length / 140 * 100).toFixed(1)}%; background: #c7d2fe; border: 1.5px solid #818cf8; color: #312e81;">
+              ${gSessions.length} 節
+            </div>
+          </div>
+          <div class="bar-value">${gSessions.length} 堂</div>
+        `;
+        gContainer.appendChild(row);
+      });
+    }
+
+    // ==================== 課堂詳細 Modal 彈跳視窗 ====================
+    let currentModalData = null;
+
+    function openCourseModal(date, groupName, groupTime, className, teacher, dateIdx, groupId) {
+      sound.playChime();
+      currentModalData = { date, groupName, groupTime, className, teacher, dateIdx, groupId };
+
+      document.getElementById('modalDate').textContent = date;
+      document.getElementById('modalGroup').textContent = groupName;
+      document.getElementById('modalTime').textContent = groupTime;
+      document.getElementById('modalClass').textContent = className;
+      
+      const conf = TEACHER_CONFIG[teacher];
+      document.getElementById('modalTeacher').innerHTML = `<span class="teacher-badge ${conf.class}">${teacher === '施文賢' ? '★ ' : ''}${teacher}</span>`;
+
+      // 取得前後週次上下文
+      const group = RAW_DATA.groups.find(g => g.groupId === groupId);
+      let contextMsg = "";
+      if (group && group.classes[className] && typeof dateIdx === 'number') {
+        const prevT = dateIdx > 0 ? group.classes[className][dateIdx - 1] : "開學第一堂";
+        const nextT = dateIdx < group.dates.length - 1 ? group.classes[className][dateIdx + 1] : "學期最後一堂";
+        contextMsg = `<strong>💡 輪替上下文：</strong> 前一週 (${dateIdx > 0 ? group.dates[dateIdx - 1] : "無"})：<span style="font-weight:700;">${prevT}</span> ➔ <strong>當週 (${date})：${teacher}</strong> ➔ 後一週 (${dateIdx < group.dates.length - 1 ? group.dates[dateIdx + 1] : "無"})：<span style="font-weight:700;">${nextT}</span>`;
+      }
+      document.getElementById('modalContextBox').innerHTML = contextMsg;
+
+      const modal = document.getElementById('courseModal');
+      modal.classList.add('show');
+    }
+
+    function closeCourseModal() {
+      sound.playTap();
+      document.getElementById('courseModal').classList.remove('show');
+    }
+
+    // ==================== 事件監聽與篩選邏輯 ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sound.playPop();
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const tab = btn.getAttribute('data-tab');
+          activeTab = tab;
+          document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+          document.getElementById(tab).classList.add('active');
+
+          refreshCurrentView();
+        });
+      });
+
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      searchInput.addEventListener('input', (e) => {
+        activeFilters.search = e.target.value.trim();
+        clearSearchBtn.style.display = activeFilters.search ? 'flex' : 'none';
+        sound.playTap();
+        refreshCurrentView();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        activeFilters.search = '';
+        clearSearchBtn.style.display = 'none';
+        sound.playReset();
+        refreshCurrentView();
+      });
+
+      document.getElementById('groupSelect').addEventListener('change', (e) => {
+        activeFilters.groupId = e.target.value;
+        sound.playTap();
+        refreshCurrentView();
+      });
+
+      document.getElementById('teacherSelect').addEventListener('change', (e) => {
+        activeFilters.teacher = e.target.value;
+        if (e.target.value !== 'all') {
+          activeTeacher = e.target.value;
+        }
+        sound.playTap();
+        refreshCurrentView();
+      });
+
+      document.getElementById('classSelect').addEventListener('change', (e) => {
+        activeFilters.className = e.target.value;
+        if (e.target.value !== 'all') {
+          activeClass = e.target.value;
+        }
+        sound.playTap();
+        refreshCurrentView();
+      });
+
+      document.getElementById('monthSelect').addEventListener('change', (e) => {
+        activeFilters.month = e.target.value;
+        sound.playTap();
+        refreshCurrentView();
+      });
+
+      document.querySelectorAll('.chip-btn').forEach(chip => {
+        chip.addEventListener('click', () => {
+          sound.playPop();
+          document.querySelectorAll('.chip-btn').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+
+          if (chip.dataset.action === 'reset') {
+            activeFilters = { search: "", groupId: "all", teacher: "all", className: "all", month: "all" };
+            searchInput.value = "";
+            clearSearchBtn.style.display = 'none';
+            document.getElementById('groupSelect').value = 'all';
+            document.getElementById('teacherSelect').value = 'all';
+            document.getElementById('classSelect').value = 'all';
+            document.getElementById('monthSelect').value = 'all';
+            showToast('已重置所有搜尋與篩選條件');
+          } else if (chip.dataset.teacher) {
+            document.getElementById('teacherSelect').value = chip.dataset.teacher;
+            activeFilters.teacher = chip.dataset.teacher;
+            activeTeacher = chip.dataset.teacher;
+            showToast(`已鎖定：${chip.dataset.teacher} 老師`);
+          } else if (chip.dataset.class) {
+            document.getElementById('classSelect').value = chip.dataset.class;
+            activeFilters.className = chip.dataset.class;
+            activeClass = chip.dataset.class;
+            showToast(`已鎖定：${chip.dataset.class}`);
+          } else if (chip.dataset.group) {
+            document.getElementById('groupSelect').value = chip.dataset.group;
+            activeFilters.groupId = chip.dataset.group;
+            showToast(`已鎖定：第 ${chip.dataset.group} 群`);
+          }
+          refreshCurrentView();
+        });
+      });
+
+      const soundBtn = document.getElementById('soundToggleBtn');
+      soundBtn.addEventListener('click', () => {
+        sound.enabled = !sound.enabled;
+        soundBtn.classList.toggle('active', sound.enabled);
+        document.getElementById('soundIcon').textContent = sound.enabled ? '🔊' : '🔇';
+        document.getElementById('soundText').textContent = sound.enabled ? '音效開啟' : '音效靜音';
+        if (sound.enabled) sound.playChime();
+        showToast(sound.enabled ? '已開啟互動音效' : '已關閉互動音效', sound.enabled ? '🔊' : '🔇');
+      });
+
+      const fontSizeBtn = document.getElementById('fontSizeBtn');
+      const fontModes = [
+        { class: '', label: '標準字體' },
+        { class: 'font-large', label: '大字體' },
+        { class: 'font-xlarge', label: '特大字體' }
+      ];
+      let fontIdx = 0;
+      fontSizeBtn.addEventListener('click', () => {
+        sound.playTap();
+        document.body.classList.remove(fontModes[fontIdx].class);
+        fontIdx = (fontIdx + 1) % fontModes.length;
+        if (fontModes[fontIdx].class) {
+          document.body.classList.add(fontModes[fontIdx].class);
+        }
+        document.getElementById('fontSizeText').textContent = fontModes[fontIdx].label;
+        showToast(`字體大小已切換為：${fontModes[fontIdx].label}`, '🔠');
+      });
+
+      document.getElementById('printBtn').addEventListener('click', () => {
+        sound.playPop();
+        window.print();
+      });
+
+      document.getElementById('modalCloseBtn').addEventListener('click', closeCourseModal);
+      document.getElementById('courseModal').addEventListener('click', (e) => {
+        if (e.target.id === 'courseModal') closeCourseModal();
+      });
+
+      document.getElementById('modalViewTeacherBtn').addEventListener('click', () => {
+        if (currentModalData) {
+          activeTeacher = currentModalData.teacher;
+          closeCourseModal();
+          document.querySelector('.tab-btn[data-tab="teacherView"]').click();
+        }
+      });
+
+      document.getElementById('modalViewClassBtn').addEventListener('click', () => {
+        if (currentModalData) {
+          activeClass = currentModalData.className;
+          closeCourseModal();
+          document.querySelector('.tab-btn[data-tab="classView"]').click();
+        }
+      });
+
+      document.getElementById('modalCopyBtn').addEventListener('click', () => {
+        if (currentModalData) {
+          const text = `【高一微課程】日期：${currentModalData.date} ｜ 群別：${currentModalData.groupName} (${currentModalData.groupTime}) ｜ 班級：${currentModalData.className} ｜ 任課教師：${currentModalData.teacher}`;
+          navigator.clipboard.writeText(text).then(() => {
+            sound.playChime();
+            showToast('已複製課堂資訊至剪貼簿！', '📋');
+          }).catch(() => {
+            showToast('複製完成！', '📋');
+          });
+        }
+      });
+
+      renderMatrixView();
+      renderTeacherView();
+      renderClassView();
+      renderDateView();
+      renderStatsView();
+
+      showToast('歡迎使用高一微課程檢索系統！支援點擊發聲與即時搜尋', '🎉');
+    });
+
+    function refreshCurrentView() {
+      if (activeTab === 'matrixView') renderMatrixView();
+      if (activeTab === 'teacherView') renderTeacherView();
+      if (activeTab === 'classView') renderClassView();
+      if (activeTab === 'dateView') renderDateView();
+      if (activeTab === 'statsView') renderStatsView();
+    }
+  </script>
+</body>
+</html>
